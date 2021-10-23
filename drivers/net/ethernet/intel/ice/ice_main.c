@@ -7397,6 +7397,9 @@ static void ice_tx_timeout(struct net_device *netdev, unsigned int txqueue)
 		break;
 	}
 
+	/* clear this now, and the first stats read will be used as baseline */
+	vsi->stat_offsets_loaded = false;
+
 	ice_service_task_schedule(pf);
 	pf->tx_timeout_recovery_level++;
 }
