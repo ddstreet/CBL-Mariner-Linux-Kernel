@@ -1978,6 +1978,7 @@ void iavf_virtchnl_completion(struct iavf_adapter *adapter,
 
 		iavf_process_config(adapter);
 		adapter->flags |= IAVF_FLAG_SETUP_NETDEV_FEATURES;
+		iavf_set_queue_vlan_tag_loc(adapter);
 		}
 		break;
 	case VIRTCHNL_OP_ENABLE_QUEUES:
