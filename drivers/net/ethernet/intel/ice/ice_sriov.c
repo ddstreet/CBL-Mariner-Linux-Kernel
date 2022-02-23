@@ -1392,7 +1392,7 @@ void ice_process_vflr_event(struct ice_pf *pf)
 		if (reg & BIT(bit_idx)) {
 			/* GLGEN_VFLRSTAT bit will be cleared in ice_reset_vf */
 			mutex_lock(&vf->cfg_lock);
-			ice_reset_vf(vf, true);
+			ice_reset_vf(vf, ICE_VF_RESET_VFLR);
 			mutex_unlock(&vf->cfg_lock);
 		}
 	}
@@ -1406,7 +1406,7 @@ void ice_process_vflr_event(struct ice_pf *pf)
 static void ice_vc_reset_vf(struct ice_vf *vf)
 {
 	ice_vc_notify_vf_reset(vf);
-	ice_reset_vf(vf, false);
+	ice_reset_vf(vf, 0);
 }
 
 /**
@@ -1723,7 +1723,7 @@ err:
 static void ice_vc_reset_vf_msg(struct ice_vf *vf)
 {
 	if (test_bit(ICE_VF_STATE_INIT, vf->vf_states))
-		ice_reset_vf(vf, false);
+		ice_reset_vf(vf, 0);
 }
 
 /**
