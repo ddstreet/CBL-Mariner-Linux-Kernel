@@ -3148,6 +3148,15 @@ out_put_vf:
 }
 
 /**
+ * ice_is_vf_trusted
+ * @vf: pointer to the VF info
+ */
+static bool ice_is_vf_trusted(struct ice_vf *vf)
+{
+	return test_bit(ICE_VIRTCHNL_VF_CAP_PRIVILEGE, &vf->vf_caps);
+}
+
+/**
  * ice_is_any_vf_in_promisc - check if any VF(s) are in promiscuous mode
  * @pf: PF structure for accessing VF(s)
  *
@@ -3211,7 +3220,7 @@ static int ice_vc_cfg_promiscuous_mode_msg(struct ice_vf *vf, u8 *msg)
 	}
 
 	dev = ice_pf_to_dev(pf);
-	if (!test_bit(ICE_VIRTCHNL_VF_CAP_PRIVILEGE, &vf->vf_caps)) {
+	if (!ice_is_vf_trusted(vf)) {
 		dev_err(dev, "Unprivileged VF %d is attempting to configure promiscuous mode\n",
 			vf->vf_id);
 		/* Leave v_ret alone, lie to the VF on purpose. */
@@ -3859,15 +3868,6 @@ error_param:
 	/* send the response to the VF */
 	return ice_vc_send_msg_to_vf(vf, VIRTCHNL_OP_CONFIG_VSI_QUEUES, v_ret,
 				     NULL, 0);
-}
-
-/**
- * ice_is_vf_trusted
- * @vf: pointer to the VF info
- */
-static bool ice_is_vf_trusted(struct ice_vf *vf)
-{
-	return test_bit(ICE_VIRTCHNL_VF_CAP_PRIVILEGE, &vf->vf_caps);
 }
 
 /**
